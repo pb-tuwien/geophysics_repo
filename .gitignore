@@ -1,0 +1,20 @@
+# Those files are untraced
+*.perf
+*.npz
+*.pdf
+*.vscode
+*__pycache__/
+*/__pycache__/
+*.datas
+*.models
+*.postbel
+*.prebel
+*.npy
+*example.png
+*.pyc
+*.egg-info
+**/results/
+**/EMI_results/
+**/.ipynb_checkpoints/
+/temp/
+**/invdir/
