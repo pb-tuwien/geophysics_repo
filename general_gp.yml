@@ -2,13 +2,6 @@ name: general_gp
 channels:
     - conda-forge
     - defaults
-    - gimli
-    - pip
 dependencies:
-    - pygimli = 1.5.2
-    - empymod = 2.4.0
     - ipython = 8.28.0
-    - obspy = 1.4.1  
-    - pandas = 2.2.3
     - ipywidgets = 8.1.5
-    - ipympl
