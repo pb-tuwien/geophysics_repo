@@ -14,7 +14,7 @@
 *.pyc
 *.egg-info
 **/results/
-**/EMI_results/
-**/.ipynb_checkpoints/
-/temp/
+**/EMI/results/
 **/invdir/
+**/.ipynb_checkpoints/
+**/temp/
