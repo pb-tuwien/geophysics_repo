@@ -16,9 +16,9 @@ from IPython.display import display, clear_output
 from datetime import datetime
 
 
-from TEM_forward.modeller import ForwardTEM
-from TEM_forward.utils import save_as_tem
-# from TEM_forward.TEM_frwrd.utils import get_TEMFAST_rampdata
+from .modeller import ForwardTEM
+from .utils import save_as_tem
+# from .utils import get_TEMFAST_rampdata
 
 
 #%% Interactive forward modelling class

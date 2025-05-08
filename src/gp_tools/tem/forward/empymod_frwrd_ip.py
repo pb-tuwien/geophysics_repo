@@ -16,9 +16,9 @@ from scipy.constants import mu_0
 from scipy.interpolate import interp1d
 import empymod
 
-from TEM_forward.utils import arsinh, kth_root, reshape_model, simulate_error
-from TEM_forward.utils import get_time, waveform, get_TEMFAST_timegates, get_TEMFAST_rampdata
-from TEM_forward.utils import cole_cole, pelton_res, mpa_model, cc_con_koz, cc_eps
+from .utils import arsinh, kth_root, reshape_model, simulate_error
+from .utils import get_time, waveform, get_TEMFAST_timegates, get_TEMFAST_rampdata
+from .utils import cole_cole, pelton_res, mpa_model, cc_con_koz, cc_eps
 
 # %% logging
 logger = logging.getLogger(__name__)
