@@ -4,7 +4,7 @@ Created on Thu Mar 6 10:45:00 2025
 
 A class for the interactive forward modelling of TEM data.
 
-@author: jakob welkens & peter balogh
+@author: jakob welkens & peter balogh @ TU Wien, Research Unit Geophysics
 """
 #%% Importing modules
 from pathlib import Path

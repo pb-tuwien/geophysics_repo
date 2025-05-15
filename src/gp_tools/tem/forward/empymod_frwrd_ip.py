@@ -4,7 +4,7 @@ Created on Thu Nov 26 16:46:17 2020
 
 class to create a TEMfast frwrd solution from empymod including the IP-effect   
 
-@author: lukas aignes
+@author: lukas aignes @ TU Wien, Research Unit Geophysics
 """
 # %% modules
 

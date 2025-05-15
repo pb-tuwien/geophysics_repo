@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Apr 17 15:31:00 2025
+
+A class for the interactive forward modelling of EMI data.
+
+@author: jakob welkens @ TU Wien, Research Unit Geophysics
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import rgb2hex

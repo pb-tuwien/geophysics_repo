@@ -4,7 +4,7 @@ Created on Wed Mar 5 18:33:00 2025
 
 A class for the forward modelling of TEM data.
 
-@author: jakob welkens & peter balogh
+@author: peter balogh @ TU Wien, Research Unit Geophysics
 """
 #%% Importing modules
 import numpy as np

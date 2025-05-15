@@ -4,7 +4,7 @@ Created on Mon Aug  8 15:21:05 2022
 
 utility function for empymod_frwrd_ip
 
-@author: lukas aigner
+@author: lukas aigner @ TU Wien, Research Unit Geophysics
 """
 #%% Necessary imports
 

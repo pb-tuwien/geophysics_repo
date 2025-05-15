@@ -4,7 +4,7 @@ Created on Thu Mar 27 11:59:00 2025
 
 A class for the interactive forward modelling of TEM data in the jupyter lab environment.
 
-@author: jakob welkens & peter balogh
+@author: jakob welkens @ TU Wien, Research Unit Geophysics
 """
 #%% Importing modules
 from pathlib import Path
