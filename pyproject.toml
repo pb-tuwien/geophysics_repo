@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools >= 77.0.3", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gp_tools"
+dynamic = ["version"]
+authors= [
+    {name="Peter Balogh", email="e12202337@student.tuwien.ac.at"},
+    {name="Jakob Welkens", email="jakob.welkens@tuwien.ac.at"},
+]
+description = "A package for the shared work on geophysical data"
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "empymod==2.4.0",
+    "ipython==8.28.0",
+    "obspy==1.4.1",
+    "numpy>=1.26,<2.0",
+    "pandas==2.2.3",
+    "pygimli==1.5.2",
+    "ipykernel",
+    "ipywidgets",
+    "ipympl",
+    "emagpy",
+    "resipy",
+    "scikit-learn"
+]
+license = "GPL-3.0-or-later"
+license-files = ["COPYING"]
+
+[project.urls]
+Homepage = "https://github.com/pb-tuwien/geophysics_repo"
+Issues = "https://github.com/pb-tuwien/geophysics_repo/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools_scm]
