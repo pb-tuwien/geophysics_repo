@@ -1,3 +1,8 @@
 from .forward import ForwardTEM, InteractiveTEM
 
-__all__ = ["ForwardTEM", "InteractiveTEM", "JupyterInteractiveTEM", 'forward']
+__all__ = [
+    "forward", 
+    "inversion",
+    "ForwardTEM", 
+    "InteractiveTEM"
+    ]
