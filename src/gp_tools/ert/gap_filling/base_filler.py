@@ -2,7 +2,7 @@
 """
 Created on Wed May 21 11:16:13 2025
 
-Read and write classes for different file types
+A basic class for gap filling of ERT pseudosections
 
 @author: peter balogh @ TU Wien, Research Unit Geophysics
 """

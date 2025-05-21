@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed May 21 11:16:13 2025
+Created on Wed May 21 19:32:05 2025
 
-Read and write classes for different file types
+A class for gap filling of ERT pseudosections based of k nearest neighbors.
 
 @author: peter balogh @ TU Wien, Research Unit Geophysics
 """
