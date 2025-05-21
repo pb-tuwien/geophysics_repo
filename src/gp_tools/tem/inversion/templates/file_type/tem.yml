@@ -1,0 +1,37 @@
+config:
+  name: 'tem'
+  file_suffix: '.tem'
+  block_start_pattern: 'TEM-FAST 48'
+  start_buffer: 0
+
+template:
+  metadata:
+    type: 'dict'
+    lines:
+      - key: ['device', 'date']
+        pattern: 'TEM-FAST 48\s+(\S+)\s+Date:\s+(\w{3} \w{3} \d{2} \d{2}:\d{2}:\d{2} \d{4})'
+        output_format: 'TEM-FAST 48 {device}\tDate: {date}'
+      - key: ['place']
+        pattern: 'Place:\s*(\S+)'
+        output_format: 'Place:\t{place}'
+      - key: ['name']
+        pattern: '#Set\s*(\S+)'
+        output_format: '#Set\t{name}'
+      - key: ['timerange', 'stacks', 'deff', 'current', 'filter', 'amplifier']
+        pattern: 'Time-Range\s+(\d+)\s+Stacks\s+(\d+)\s+deff=\s*(\d+)\s*us\s*I=(\d+(?:\.\d+)?)\s*A\s*FILTR=(\d+)\s*Hz\s*AMPLIFER=(\w+)'
+        output_format: 'Time-Range\t{timerange}\tStacks\t{stacks}\tdeff= {deff} us\tI={current} A\tFILTR={filter} Hz\tAMPLIFER={amplifier}'
+      - key: ['tloop', 'rloop', 'turn']
+        pattern: 'T-LOOP \(m\)\s+([\d\.]+)\s+R-LOOP \(m\)\s+([\d\.]+)\s+TURN=\s*(\d+)'
+        output_format: 'T-LOOP (m)\t{tloop}\tR-LOOP (m)\t{rloop}\tTURN=\t{turn}'
+      - key: ['comments']
+        pattern: 'Comments:\s*(\S*)'
+        output_format: 'Comments:\t{comments}'
+      - key: ['x', 'y', 'z']
+        pattern: 'Location:\s*x=\s*([+-]?\d+\.\d+)\s*y=\s*([+-]?\d+\.\d+)\s*z=\s*([+-]?\d+\.\d+)'
+        output_format: 'Location:x=\t{x}\ty=\t{y}\tz=\t{z}'
+  data:
+    type: 'dataframe'
+    start_after: 7
+    end_with: 'TEM'
+    end_after: -1
+    delimiter: '\t'

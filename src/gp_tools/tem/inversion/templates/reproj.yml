@@ -1,0 +1,23 @@
+wgs84_utm32n:
+  initial: 'EPSG:4326'
+  to: 'EPSG:32632'
+
+wgs84_utm33n:
+  initial: 'EPSG:4326'
+  to: 'EPSG:32633'
+
+wgs84_utm34n:
+  initial: 'EPSG:4326'
+  to: 'EPSG:32634'
+
+utm32n_wgs84:
+  initial: 'EPSG:32632'
+  to: 'EPSG:4326'
+
+utm33n_wgs84:
+  initial: 'EPSG:32633'
+  to: 'EPSG:4326'
+
+utm34n_wgs84:
+  initial: 'EPSG:32634'
+  to: 'EPSG:4326'

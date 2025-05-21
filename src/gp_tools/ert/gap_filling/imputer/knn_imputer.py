@@ -18,7 +18,7 @@ from sklearn.impute import KNNImputer
 class KNNfiller:
     def __init__(self, missing_values: Union[float, int, None] = np.nan,
                  neighbors: int = 6,
-                 weights: Union[Literal['distance', 'uniform'], callable] = 'distance',
+                 weights: Union[Literal['distance', 'distance_sqrt', 'uniform'], callable] = 'distance',
                  metric: Union[Literal['weighted_euclidean', 'nan_euclidean'], callable] = 'weighted_euclidean',
                  horizontal_weight: Union[int, float] = 1
                  ):
@@ -26,6 +26,7 @@ class KNNfiller:
         self.neighbors = neighbors
 
         metric = self.__weighted_distance if metric == 'weighted_euclidean' else metric
+        weights = self.__distance_squared if weights == 'distance_sqrt' else weights
 
         self.__imputer = KNNImputer(
             missing_values=missing_values,
@@ -65,6 +66,9 @@ class KNNfiller:
         x_distance = (x[0] - y[0])
         y_distance = (x[1] - y[1])
         return np.sqrt(x_distance**2 + (y_distance**2)*self.horizontal_weight)
+    
+    def __distance_squared(self, distances: np.ndarray) -> np.ndarray:
+        return 1 / distances**2
     
     def fit_transform(self, data: Union[pd.DataFrame, np.ndarray]):
         if isinstance(data, pd.DataFrame):
