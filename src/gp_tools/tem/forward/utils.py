@@ -1244,7 +1244,8 @@ def plot_model(
         title_default = 'Resistivity'
     
     ax.plot(param, dpth, **kwargs)
-    ax.invert_yaxis()
+    if not ax.yaxis_inverted():
+        ax.invert_yaxis()
     ax.set_ylabel('Depth (m)')
     ax.set_xlabel(xlabel)
     if title is not None:
