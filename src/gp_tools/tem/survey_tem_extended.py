@@ -2,9 +2,10 @@
 """
 Created on Sun Nov 03 19:31:36 2024
 
-@author: peter & jakob
-"""
+An extension class to SurveyTEM.
 
+@author: jakob welkens & peter balogh @ TU Wien, Research Unit Geophysics
+"""
 #%% Import modules
 
 from scipy.interpolate import griddata
@@ -16,7 +17,7 @@ import numpy as np
 import pandas as pd
 # from datetime import datetime
 import matplotlib.pyplot as plt
-import TEM_tools.tem.survey_tem as st
+import gp_tools.tem.survey_tem as st
 
 warnings.filterwarnings('ignore')
 

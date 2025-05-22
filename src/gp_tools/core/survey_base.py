@@ -2,22 +2,18 @@
 """
 Created on Sun Nov 03 17:31:37 2024
 
-@author: peter
-"""
+A base class for geophysical surveys.
 
+@author: peter balogh @ TU Wien, Research Unit Geophysics
+"""
 #%% Import modules
 
 from pathlib import Path
 from typing import Optional, Union
 import pandas as pd
-from TEM_tools.core.base import BaseFunction
-from TEM_tools.core.gp_coords import GPcoords
-from TEM_tools.core.gp_folder import GPfolder
-
-#%% Aufgaben
-
-#todo: Implement GPconfig in SurveyBase class
-#todo: add docstrings to SurveyBase class
+from .utils import BaseFunction
+from .coordinate_handler import CoordinateHandler
+from .folder_handler import FolderHandler
 
 #%% SurveyBase class
 
@@ -28,7 +24,7 @@ class SurveyBase(BaseFunction):
     It gives the user a structured way to handle survey coordinates.
     For handling survey data, the user should go to the daughter classes.
     """
-    def __init__(self, project_dir: Union[Path, str], dir_structure: Union[str, dict]) -> None:
+    def __init__(self, project_dir: Union[Path, str], dir_structure: Union[str, dict], save_log: bool = False) -> None:
         """
         Initializes the SurveyBase class.
 
@@ -46,13 +42,13 @@ class SurveyBase(BaseFunction):
         self._project_dir = Path(project_dir)
         self._dir_structure = dir_structure
 
-        self._gp_folder = GPfolder(root_path=self._project_dir, template=self._dir_structure)
+        self._gp_folder = FolderHandler(root_path=self._project_dir, template=self._dir_structure, save_log=save_log)
         self._log_path = self._gp_folder.log_path()
         self._folder_structure = self._gp_folder.folder_structure()
 
         self.logger = self._setup_logger(log_path=self._log_path)
 
-        self._gp_coords = GPcoords(log_path=self._log_path)
+        self._gp_coords = CoordinateHandler(log_path=self._log_path)
 
     def project_dir(self) -> Path:
         """

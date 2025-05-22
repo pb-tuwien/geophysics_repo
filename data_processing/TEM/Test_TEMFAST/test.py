@@ -1,5 +1,5 @@
 #%% Modules
-from TEM_tools.tem.survey_tem import SurveyTEM
+from gp_tools.tem.survey_tem import SurveyTEM
 
 #%% Preprocess
 

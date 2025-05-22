@@ -8,10 +8,6 @@ Class for creating folder structures.
 """
 
 #%% Imports
-from typing import Optional
-
-#%% Import modules
-
 import json
 from pathlib import Path
 import shutil

@@ -18,7 +18,6 @@ from pyproj import Transformer
 from tqdm import tqdm
 from .utils import BaseFunction
 
-
 #%% GPcoords class
 
 class CoordinateHandler(BaseFunction):

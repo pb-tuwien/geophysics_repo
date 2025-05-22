@@ -4,7 +4,7 @@ Created on Thu Nov 26 16:46:17 2020
 
 class to create a TEMfast frwrd solution from empymod including the IP-effect   
 
-@author: lukas aignes @ TU Wien, Research Unit Geophysics
+@author: lukas aigner @ TU Wien, Research Unit Geophysics
 """
 # %% modules
 
@@ -33,7 +33,8 @@ class empymod_frwrd(object):
     def __init__(self, setup_device, setup_solver,
                  time_range=None, device='TEMfast',
                  relerr=1e-6, abserr=1e-28,
-                 nlayer=None, nparam=2):
+                 nlayer=None, nparam=2,
+                 times_rx=None):
         """
         Constructor for the frwrd solution with simpeg.
         Parameters
@@ -56,6 +57,8 @@ class empymod_frwrd(object):
             number of layers in the model.
         nparam : int, optional
             number of parameters in the model.
+        times_rx : np.ndarray, optional
+            array with the times
 
         Returns
         -------
@@ -78,7 +81,7 @@ class empymod_frwrd(object):
         self.rhoa_noise = None
         self.mesh = None
         self.properties_snd = None
-        self.times_rx = None
+        self.times_rx = times_rx
         self.ip_modeltype = None
 
         if setup_solver is None:
@@ -205,7 +208,10 @@ class empymod_frwrd(object):
 
         # get timegates of tem fast device and combine with the adequate key
         gates = properties_device.allGates[properties_device.timeKeys == time_key].values[0]
-        times_rx = np.asarray(timegates.centerT[0:gates] * 1e-6) # from mus to s
+        if self.times_rx is None:
+            times_rx = np.asarray(timegates.centerT[0:gates] * 1e-6) # from mus to s
+        else:
+            times_rx = self.times_rx
 
         # create parameters of source and waveform:
         pulse_length = properties_device.ONtimes[properties_device.timeKeys == time_key].values[0]

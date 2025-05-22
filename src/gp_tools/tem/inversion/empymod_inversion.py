@@ -7,15 +7,13 @@ uses empymod as forward solver.
 
 based upon pygimli example
 
-@author: lukas aigner at TUWIEN
+@author: lukas aigner @ TU Wien, Research Unit Geophysics
 """
 
 # %% import modules
 import numpy as np
 import pygimli as pg
-
-from TEM_tools.tem.TEM_frwrd.empymod_frwrd import empymod_frwrd
-
+from gp_tools.tem.forward import empymod_frwrd
 
 # %% class_lib
 class tem_smooth1D_fwd(pg.Modelling):
@@ -32,7 +30,7 @@ class tem_smooth1D_fwd(pg.Modelling):
 
     def response(self, values):
         """Forward response of a given model."""
-        return self.empy_frwrd.calc_response(np.column_stack((self.dep, values)))
+        return self.empy_frwrd.calc_response(np.column_stack((self.dep, values)), ip_modeltype=None)
 
 
 class tem_inv_smooth1D(pg.Inversion):
@@ -85,7 +83,7 @@ class tem_inv_smooth1D(pg.Inversion):
         empy_frwrd = empymod_frwrd(setup_device=self.setup_device,
                                    setup_solver=None,
                                    times_rx=times_rx,
-                                   filter_times=filter_times, device='TEMfast',
+                                   time_range=None, device='TEMfast',
                                    nlayer=self.nlayer, nparam=2)
 
         # self.depth_fixed = np.linspace(0., max_depth, self.nlayer)      #todo: fixed depth vector for inversion, add as parameter

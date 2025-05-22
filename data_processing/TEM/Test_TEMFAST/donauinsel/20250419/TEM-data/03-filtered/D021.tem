@@ -1,9 +1,0 @@
-TEM-FAST 48 HPC/S2	Date: Sat Apr 19 12:22:26 2025
-Place:	DONAUINSEL
-#Set	7_700_0.025
-Time-Range	9	Stacks	15	deff= 3 us	I=4.1 A	FILTR=50 Hz	AMPLIFER=OFF
-T-LOOP (m)	6.25	R-LOOP (m)	6.25	TURN=	1
-Comments:	6.25-25
-Location:x=	None	y=	None	z=	None
-Channel	Time	E/I[V/A]	Err[V/A]	Res[Ohm-m]	rhoa	sigma	rel_err
-14.0	4.33e-05	3.98848e-06	1.00961024e-06	13.88	13.88431286854978	0.0720237299078128	0.2531315789473684

@@ -2,7 +2,9 @@
 """
 Created on Sun Nov 03 19:31:36 2024
 
-@author: peter & jakob
+A class for TEM surveys. Can do forward modelling, inversion and L-curve-analysis.
+
+@author: peter balogh @ TU Wien, Research Unit Geophysics
 """
 
 #%% Import modules
@@ -10,7 +12,7 @@ Created on Sun Nov 03 19:31:36 2024
 from pathlib import Path
 import warnings
 from tqdm import tqdm
-from typing import Optional, Tuple, Union #, Any
+from typing import Optional, Tuple, Union
 import numpy as np
 import pandas as pd
 from datetime import datetime
@@ -18,23 +20,25 @@ import matplotlib.pyplot as plt
 import pygimli.viewer.mpl
 from scipy.interpolate import CubicSpline
 
-from TEM_tools.core.gp_file import GPfile
-from TEM_tools.tem.TEM_frwrd.TEM_inv import tem_inv_smooth1D
-from TEM_tools.framework.survey_base import SurveyBase
+from gp_tools.core import TEMfile, TIMfile, SurveyBase
+from .inversion.empymod_inversion import tem_inv_smooth1D
 
 warnings.filterwarnings('ignore')
 
 #%% SurveyTEM class
 
 class SurveyTEM(SurveyBase):
-    def __init__(self, project_directory: Union[Path, str], dir_template: str = 'tem_default') -> None:
+    def __init__(self, project_directory: Union[Path, str], 
+                 dir_template: str = 'tem_default', 
+                 save_log: bool = False, 
+                 location: str = 'donauinsel') -> None:
         
         self._data_modelled = None
         self._mu = 4 * np.pi * 10 ** (-7)
         plt.close('all')
         plt.rcParams['figure.dpi'] = 300
         
-        super().__init__(project_dir=project_directory, dir_structure=dir_template)
+        super().__init__(project_dir=project_directory, dir_structure=dir_template, save_log=save_log)
 
         self._data_raw_path = None
         self._data_preprocessed_path = None
@@ -48,6 +52,8 @@ class SurveyTEM(SurveyBase):
         
         self.chosen_data = {}
         self.path_plot_sounding = None
+
+        self.__ramp_location = location
 
     def data_raw_path(self) -> Path:
         """
@@ -205,14 +211,14 @@ class SurveyTEM(SurveyBase):
                     self.logger.error('No raw data files found.')
                 else:
                     data_path = raw_paths[0]
-                    self._data_raw = GPfile().read(file_path=data_path)
+                    self._data_raw = TEMfile.read(data_path).data
                     self._data_raw_path = data_path
         else:
             data = Path(data)
             if data.exists():
                 new_data = data_raw / data.name
                 self._gp_folder.move_files(from_path=data, to_path=data_raw)
-                self._data_raw = GPfile().read(file_path=new_data)
+                self._data_raw = TEMfile.read(new_data).data
                 self._data_raw_path = data
             else:
                 self.logger.warning('Data file not found. Tries to read the data from the directory structure.')
@@ -268,7 +274,6 @@ class SurveyTEM(SurveyBase):
         if self._coordinates_grouped is None:
             self.logger.warning('_add_coords_to_data: No coordinates found. Continued without.')
             return data_dict
-            # raise KeyError('_add_coords_to_data: No coordinates found.')
 
         new_data_dict = data_dict.copy()
 
@@ -279,7 +284,6 @@ class SurveyTEM(SurveyBase):
                 else:
                     coords_key = key
 
-                # coordinates = self._coordinates_grouped.get(coords_key, {}).get(('x', 'y', 'z'), (0, 0, 0))
                 value['metadata']['x'] = self._coordinates_grouped.get(coords_key, {}).get('x', 0)
                 value['metadata']['y'] = self._coordinates_grouped.get(coords_key, {}).get('y', 0)
                 value['metadata']['z'] = self._coordinates_grouped.get(coords_key, {}).get('z', 0)
@@ -364,7 +368,7 @@ class SurveyTEM(SurveyBase):
 
         if data_path.exists():
             self.logger.info('data_preprocess: Preprocessed data already exists. Reading file.')
-            self._data_preprocessed = GPfile().read(file_path=data_path)
+            self._data_preprocessed = TEMfile.read(filepath=data_path).data
             self._data_preprocessed_path = data_path
         else:
             self.logger.info('data_preprocess: Preprocessing data.')
@@ -374,7 +378,7 @@ class SurveyTEM(SurveyBase):
 
             self._data_preprocessed = data_dict
             self._data_preprocessed_path = data_path
-            GPfile().write(data=data_dict, file_path=data_path)
+            TEMfile.write(data=data_dict, filepath=data_path)
 
     def _filter_sounding(self, data_dict: dict,
                          filter_times: Tuple[Union[float, int], Union[float, int]],
@@ -490,20 +494,20 @@ class SurveyTEM(SurveyBase):
             file_path_filtered = filter_dir_path / f'{key}.tem'
 
             if file_path_filtered.exists():
-                data_filtered = GPfile().read(file_path=file_path_filtered, verbose=False)
+                data_filtered = TEMfile.read(filepath=file_path_filtered).data
 
                 if data_filtered.get(filter_key) is None:
                     data = self._data_preprocessed.get(key)
                     data_filtered[filter_key] = self._filter_sounding(data_dict=data, filter_times=filter_times,
                                                                       noise_floor=noise_floor)
-                    GPfile().write(data=data_filtered, file_path=file_path_filtered, verbose=False)
+                    TEMfile.write(data=data_filtered, filepath=file_path_filtered)
 
             else:
                 data_filtered = {}
                 data = self._data_preprocessed.get(key)
                 data_filtered[filter_key] = self._filter_sounding(data_dict=data, filter_times=filter_times,
                                                                   noise_floor=noise_floor)
-                GPfile().write(data=data_filtered, file_path=file_path_filtered, verbose=False)
+                TEMfile.write(data=data_filtered, filepath=file_path_filtered)
 
             if self._data_filtered.get(key) is None:
                 self._data_filtered[key] = {}
@@ -543,7 +547,8 @@ class SurveyTEM(SurveyBase):
             "txloop": tloop,
             "rxloop": rloop,
             "current_inj": current,
-            "filter_powerline": filter_pl
+            "filter_powerline": filter_pl,
+            "ramp_data": self.__ramp_location
         }
 
         # setup inv class and calculate response of homogeneous model
@@ -618,7 +623,8 @@ class SurveyTEM(SurveyBase):
             "txloop": tloop,
             "rxloop": rloop,
             "current_inj": current,
-            "filter_powerline": filter_pl
+            "filter_powerline": filter_pl,
+            "ramp_location": self.__ramp_location
         }
 
         # setup inv class and calculate response of homogeneous model
@@ -739,7 +745,7 @@ class SurveyTEM(SurveyBase):
 
             inv_key = None
             if file_path_inversion.exists():
-                data_inversion = GPfile().read(file_path=file_path_inversion, verbose=False)
+                data_inversion = TIMfile.read(filepath=file_path_inversion).data
                 key_list = [key for key in data_inversion.keys() if key.startswith(inversion_key)]
 
                 data_missing = True
@@ -784,7 +790,7 @@ class SurveyTEM(SurveyBase):
                                                                    verbose=verbose)
                 data_inversion[inv_key]['metadata']['name'] = inv_key
                 data_inversion[inv_key]['metadata']['max_depth'] = max_depth
-                GPfile().write(data=data_inversion, file_path=file_path_inversion, verbose=False)
+                TIMfile.write(data=data_inversion, filepath=file_path_inversion)
 
             if self._data_inverted.get(key) is None:
                 self._data_inverted[key] = {}

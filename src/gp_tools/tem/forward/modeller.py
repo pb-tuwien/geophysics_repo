@@ -14,7 +14,7 @@ import IPython.display as display
 import matplotlib.gridspec as gridspec
 from typing import Union
 import itertools
-from .empymod_frwrd_ip import empymod_frwrd
+from .empymod_forward import empymod_frwrd
 from .utils import plot_model, plot_data
 
 #%% ForwardTEM class
