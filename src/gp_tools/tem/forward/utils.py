@@ -1074,7 +1074,7 @@ def plot_data(
         ylimits_signal: Union[tuple, None] = None, ylimits_rhoa: Union[tuple, None] = None, 
         xlimits: Union[tuple, None] = None, log_rhoa: bool = False, 
         show_sub0_label: bool = False, res2con: bool = False, 
-        sub0_color_signal: str = 'k', sub0_color_rhoa: str = 'k',
+        sub0_color_signal: str = 'k', sub0_color_rhoa: str = 'k', legend=True,
         **kwargs
         ) -> np.ndarray:
     """
@@ -1173,10 +1173,11 @@ def plot_data(
     else:
         ax[1].set_title(f'Apparent {param}', fontsize=14)
     
-    if ax[0].get_legend_handles_labels()[1]:
-            ax[0].legend(loc='lower left')
-    if ax[1].get_legend_handles_labels()[1]:
-            ax[1].legend(loc='lower left')
+    if legend:
+        if ax[0].get_legend_handles_labels()[1]:
+                ax[0].legend(loc='lower left')
+        if ax[1].get_legend_handles_labels()[1]:
+                ax[1].legend(loc='lower left')
 
     return ax
     

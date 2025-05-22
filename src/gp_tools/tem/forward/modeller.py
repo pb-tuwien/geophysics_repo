@@ -599,7 +599,7 @@ class ForwardTEM:
                   label: Union[str, None] = None, xlimits: Union[tuple, None] = None, 
                   ylimits_signal: Union[tuple, None] = None, ylimits_rhoa: Union[tuple, None] = None, 
                   log_rhoa: bool = False, res2con: bool = None,
-                  plot_noisy: bool = False, **kwargs):
+                  plot_noisy: bool = False, legend=True, **kwargs):
         """
         Method to plot the last modelled signal response and apparent resistivity with a predefined style.
 
@@ -678,7 +678,7 @@ class ForwardTEM:
             rhoa=rhoa, noise_rhoa=None,
             xlimits=xlimits, ylimits_signal=ylimits_signal,
             ylimits_rhoa=ylimits_rhoa, log_rhoa=log_rhoa,
-            res2con=res2con, **kwargs
+            res2con=res2con, legend=legend, **kwargs
             )
         
         return ax
@@ -790,7 +790,7 @@ class ForwardTEM:
         return labels, titles, limits
 
     def run(self, description: Union[str, None] = None, color: Union[str, None] = None, 
-            plot_noisy: bool = False):
+            plot_noisy: bool = False, legend: bool = True): 
         """
         This function runs the forward modeller with the given settings and model, creating a plot.
         Currently only a **simple** resistivity model as well as the **pelton** and **mpa** models are implemented properly.
@@ -883,7 +883,7 @@ class ForwardTEM:
         self.plot_data(
             ax=ax_response, show_noise=show_noise, 
             label=description, color=color,
-            plot_noisy=plot_noisy
+            plot_noisy=plot_noisy, legend=legend
             )
 
         labels, titles, limits = self.__get_model_parameters()
