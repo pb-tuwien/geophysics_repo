@@ -148,13 +148,13 @@ class GapFiller:
             column = 'rel_misfit'
         else:
             title = 'Misfit'
-            label = None
+            label = r'$\rho_a$ ($\Omega$m)'
             column = 'misfit'
 
         if ax is None:
             return_fig = True
             fig, ax = plt.subplots()
-            ax.set_title('Misfit')
+            ax.set_title(title)
         else:
             return_fig = False
             fig = ax.get_figure()
