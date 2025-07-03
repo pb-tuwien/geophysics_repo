@@ -144,7 +144,7 @@ class SurveyBase(BaseFunction):
                     self.logger.warning('coords_read: No raw coordinate files found in the directory structure.')
                 else:
                     self._gp_coords.read(file_path=raw_paths[0], sep=sep)
-                    self._coordinates_raw = self._gp_coords.coordinates()
+                    self._coordinates_raw = self._gp_coords.coordinates
 
             if proc_coords is not None and proc_coords.exists():
                 proc_paths = [path for path in proc_coords.iterdir() if path.is_file()]
@@ -154,7 +154,7 @@ class SurveyBase(BaseFunction):
                     self.logger.warning('coords_read: No processed coordinate files found in the directory structure.')
                 else:
                     self._gp_coords.read(file_path=proc_paths[0], sep=sep)
-                    self._coordinates_proc = self._gp_coords.coordinates()
+                    self._coordinates_proc = self._gp_coords.coordinates
                     self._coordinates_grouped = self._gp_coords.extract_coords()
 
         else:
@@ -164,7 +164,7 @@ class SurveyBase(BaseFunction):
                 new_coords = raw_coords / file_name
                 self._gp_folder.move_files(from_path=coords, to_path=raw_coords)
                 self._gp_coords.read(file_path=new_coords, sep=sep)
-                self._coordinates_raw = self._gp_coords.coordinates()
+                self._coordinates_raw = self._gp_coords.coordinates
             else:
                 self.logger.warning('coords_read: No file found. Tries reading from the directory structure.')
                 if coords is not None:
@@ -283,7 +283,7 @@ class SurveyBase(BaseFunction):
         if proc_coords is None:
             self.logger.warning('coords_extract_save: No processed coordinates folder found in the directory structure.')
         else:
-            coords_file = self._gp_coords.coordinate_path()
+            coords_file = self._gp_coords.coordinate_path
             if coords_file.parent != proc_coords:
                 proc_file = proc_coords / f'{coords_file.stem}_proc{coords_file.suffix}'
                 self._gp_coords.write(file_path=proc_file)
