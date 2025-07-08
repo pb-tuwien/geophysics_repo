@@ -11,7 +11,7 @@ utility function for empymod_frwrd_ip
 import numpy as np
 import pandas as pd
 import datetime
-from typing import Union
+from typing import Union, Optional
 import matplotlib
 import matplotlib.pyplot as plt
 from scipy.constants import epsilon_0
@@ -893,8 +893,8 @@ def save_as_tem(
 
 def plot_signal(
         time: np.ndarray, signal: np.ndarray, 
-        noise: Union[np.ndarray, None] = None, ax: Union[matplotlib.axes.Axes, None] = None,
-        xlimits: Union[tuple, None] = None, ylimits: Union[tuple, None] = None,
+        noise: Optional[np.ndarray] = None, ax: Optional[matplotlib.axes.Axes] = None,
+        xlimits: Optional[tuple] = None, ylimits: Optional[tuple] = None,
         sub0col: str = 'k', show_sub0_label: bool = True,
         sub0_ms: Union[float, int] = 5, sub0_mew: Union[float, int] = 1, 
         sub0_mfc: str = 'none', **kwargs
@@ -960,6 +960,13 @@ def plot_signal(
                     mec=sub0col)
         
     if noise is not None:
+        if kwargs.get('alpha') is not None:
+            _ = kwargs.pop('alpha')
+        if kwargs.get('marker') is not None:
+            _ = kwargs.pop('marker')
+        if kwargs.get('linestyle') is not None:
+            _ = kwargs.pop('linestyle')
+            
         ax.loglog(time, noise, linestyle='--', alpha=0.3, **kwargs)
     ax.set_xlabel(r'time (s)')
     ax.set_ylabel(r"$\mathrm{d}\mathrm{B}_\mathrm{z}\,/\,\mathrm{d}t$ (V/m²)")
@@ -973,9 +980,9 @@ def plot_signal(
 
 def plot_rhoa(
         time: np.ndarray, rhoa: np.ndarray, 
-        noise: Union[np.ndarray, None] = None, ax: Union[matplotlib.axes.Axes] = None, 
+        noise: Optional[np.ndarray] = None, ax: Optional[matplotlib.axes.Axes] = None, 
         log_yaxis: bool = False, res2con: bool = False,
-        xlimits: Union[tuple, None] = None, ylimits: Union[tuple, None] = None,
+        xlimits: Optional[tuple] = None, ylimits: Optional[tuple] = None,
         sub0col: str = 'k', show_sub0_label: bool = True,
         sub0_ms: Union[float, int] = 5, sub0_mew: Union[float, int] = 1, 
         sub0_mfc: str = 'none', **kwargs
@@ -1049,8 +1056,15 @@ def plot_rhoa(
         ax.semilogx(time_sub0, abs(app_val_sub0), marker='s', ls='none',
                     mfc=sub0_mfc, ms=sub0_ms, mew=sub0_mew,
                     mec=sub0col)
-    
+        
     if noise is not None:
+        if kwargs.get('alpha') is not None:
+            _ = kwargs.pop('alpha')
+        if kwargs.get('marker') is not None:
+            _ = kwargs.pop('marker')
+        if kwargs.get('linestyle') is not None:
+            _ = kwargs.pop('linestyle')
+
         ax.semilogx(time, noise, linestyle='--', alpha=0.3, **kwargs)
     ax.set_xlabel(r'time (s)')
     ax.set_ylabel(ylabel)
@@ -1068,12 +1082,12 @@ def plot_rhoa(
 def plot_data(
         time: np.ndarray, signal: np.ndarray, 
         rhoa: np.ndarray, ax=None,
-        signal_title: Union[str, None] = None, rhoa_title: Union[str, None] = None, 
-        signal_label: Union[str, None] = None, rhoa_label: Union[str, None] = None,
-        noise_signal: Union[np.ndarray, None] = None, noise_rhoa: Union[np.ndarray, None] = None, 
-        ylimits_signal: Union[tuple, None] = None, ylimits_rhoa: Union[tuple, None] = None, 
-        xlimits: Union[tuple, None] = None, log_rhoa: bool = False, 
-        show_sub0_label: bool = False, res2con: bool = False, 
+        signal_title: Optional[str] = None, rhoa_title: Optional[str] = None, 
+        signal_label: Optional[str] = None, rhoa_label: Optional[str] = None,
+        noise_signal: Optional[np.ndarray] = None, noise_rhoa: Optional[np.ndarray] = None, 
+        ylimits_signal: Optional[tuple] = None, ylimits_rhoa: Optional[tuple] = None, 
+        xlimits: Optional[tuple] = None, log_rhoa: bool = False, 
+        show_sub0_label: bool = False, res2con: bool = False, fontweight: Optional[str] = None,
         sub0_color_signal: str = 'k', sub0_color_rhoa: str = 'k', legend=True,
         **kwargs
         ) -> np.ndarray:
@@ -1116,7 +1130,9 @@ def plot_data(
     show_sub0_label : bool, optional
         Add a label to the sub zero values. The default is True.
     res2con: boolean, optional
-        If the resistivity should be converted to conductivity (Ohm*m to mS/m). The default is False:
+        If the resistivity should be converted to conductivity (Ohm*m to mS/m). The default is False.
+    fontweight: str, optional
+        Fontweight of the title. The default is chosen by matplotlib.
     sub0_color_signal : str, optional
         Markeredgecolor for the sub zero marker in the signal plot. The default is 'k'.
     sub0_color_rhoa : str, optional
@@ -1159,19 +1175,18 @@ def plot_data(
     else:
         param = 'Resistivity'
 
-    ax[0].grid(True)
-    if signal_title is not None:
-        ax[0].set_title(signal_title, fontsize=14)
-    else:
-        ax[0].set_title('Response Signal', fontsize=14)
-    
+    ax[0].grid(True, which="both", alpha=.3)
+    ax[1].grid(True, which="both", alpha=.3)
+
+    if signal_title is None:
+        signal_title = 'Response Signal'
+    ax[0].set_title(signal_title, fontsize=14, fontweight=fontweight)
+    if rhoa_title is None:
+        rhoa_title = f'Apparent {param}'
+    ax[1].set_title(rhoa_title, fontsize=14, fontweight=fontweight)
+
     ax[1].yaxis.tick_right()
     ax[1].yaxis.set_label_position("right")
-    ax[1].grid(True)
-    if rhoa_title is not None:
-        ax[1].set_title(rhoa_title, fontsize=14)
-    else:
-        ax[1].set_title(f'Apparent {param}', fontsize=14)
     
     if legend:
         if ax[0].get_legend_handles_labels()[1]:
@@ -1182,10 +1197,10 @@ def plot_data(
     return ax
     
 def plot_model(
-        model: np.ndarray, ax: Union[matplotlib.axes.Axes, None] = None, 
-        add_bottom: Union[float, int] = 0, title: Union[str, None] = None,
-        xlimits: Union[tuple, None] = None, ylimits: Union[tuple, None] = None,
-        res2con: bool = False, **kwargs
+        model: np.ndarray, ax: Optional[matplotlib.axes.Axes] = None, 
+        add_bottom: Union[float, int] = 0, title: Optional[str] = None,
+        xlimits: Optional[tuple] = None, ylimits: Optional[tuple] = None,
+        res2con: bool = False, fontweight: Optional[str] = None, **kwargs
         ) -> matplotlib.axes.Axes:
     """
     Method to plot the subsurface (resistivity) model with a predefined style.
@@ -1214,6 +1229,8 @@ def plot_model(
         Y-axis limits. The default is None (No limit is applied).
     res2con: boolean, optional
         If the resistivity should be converted to conductivity (Ohm*m to mS/m). The default is False.
+    fontweight: str, optional
+        Fontweight of the title. The default is chosen by matplotlib.
     **kwargs : dict
         Keyword arguments for the plot() function.
     
@@ -1247,14 +1264,15 @@ def plot_model(
     ax.plot(param, dpth, **kwargs)
     if not ax.yaxis_inverted():
         ax.invert_yaxis()
+        
     ax.set_ylabel('Depth (m)')
     ax.set_xlabel(xlabel)
-    if title is not None:
-        ax.set_title(title, fontsize=14)
-    else:
-        ax.set_title(title_default, fontsize=14)
 
-    ax.grid(True)
+    if title is None:
+        title = title_default
+    ax.set_title(title, fontsize=14, fontweight=fontweight)
+
+    ax.grid(True, which="both", alpha=.3)
     
     if xlimits is not None:
         ax.set_xlim(xlimits)

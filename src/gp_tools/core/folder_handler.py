@@ -11,7 +11,7 @@ Class for creating folder structures.
 import json
 from pathlib import Path
 import shutil
-from typing import Union
+from typing import Union, Optional
 from .utils import BaseFunction
 
 # %% GPfolder class
@@ -36,16 +36,15 @@ class FolderHandler(BaseFunction):
         save_log: bool, optional
             If the log should be saved to a log file. The default is False.
         """
-        self._root_path = Path(root_path)
-        self._templates_dir = None
-        self._log_path = None
+        self.root_path = root_path
         self._load_templates()
-        self._dir_template = self._choose_template(template)
-        self._folder_structure = self._create_folders(save_log=save_log)
+        self.__dir_template = self._choose_template(template)
+        self._create_folders(save_log=save_log)
 
-        self.logger = self._setup_logger(log_path=self.log_path())
+        self.logger = self._setup_logger(log_path=self.log_path)
 
-    def root_path(self):
+    @property
+    def root_path(self) -> Path:
         """
         Returns the root path of the directory structure.
 
@@ -54,9 +53,17 @@ class FolderHandler(BaseFunction):
         Path
             The root path of the directory structure.
         """
-        return self._root_path
+        return self.__root_path
+    
+    @root_path.setter
+    def root_path(self, path: Union[str, Path]):
+        """
+        Setter of root_path property
+        """
+        self.__root_path = Path(path)
 
-    def dir_template(self):
+    @property
+    def dir_template(self) -> dict:
         """
         Returns the folder structure of the directory.
 
@@ -65,9 +72,10 @@ class FolderHandler(BaseFunction):
         dict
             The folder structure of the directory.
         """
-        return self._dir_template
+        return self.__dir_template
 
-    def log_path(self):
+    @property
+    def log_path(self) -> Optional[Path]:
         """
         Returns the path of the log file.
 
@@ -76,8 +84,19 @@ class FolderHandler(BaseFunction):
         Path
             The path of the log file.
         """
-        return self._log_path
+        return self.__log_path
+    
+    @log_path.setter
+    def log_path(self, filepath: Union[str, Path, None]):
+        """
+        Setter for log_path property.
+        """
+        if filepath is None:
+            self.__log_path = None
+        else:
+            self.__log_path = Path(filepath)
 
+    @property
     def folder_structure(self):
         """
         Returns the folders of the directory structure.
@@ -87,7 +106,7 @@ class FolderHandler(BaseFunction):
         dict
             The folders of the directory structure.
         """
-        return self._folder_structure
+        return self.__folder_structure
 
     def _load_templates(self):
         """
@@ -104,7 +123,7 @@ class FolderHandler(BaseFunction):
                              template_folder.iterdir() if file.is_file() and file.suffix == '.json']
             if len(templates_dir) == 0:
                 raise FileNotFoundError('No templates for directory structure found.')
-            self._templates_dir = {temp.get('name', name): temp for name, temp in
+            self.__templates_dir = {temp.get('name', name): temp for name, temp in
                                     templates_dir if temp.get('type') == 'dir_structure'}
         else:
             raise FileNotFoundError('Make sure "templates/dir_structure" directory exists.')
@@ -121,14 +140,14 @@ class FolderHandler(BaseFunction):
         if isinstance(template, dict):
             return template
         elif isinstance(template, str):
-            if template in self._templates_dir.keys():
-                return self._templates_dir[template]
+            if template in self.__templates_dir.keys():
+                return self.__templates_dir[template]
             else:
                 raise KeyError(f'Template "{template}" not found in the templates directory.')
         else:
             raise TypeError('Template must be a string or a dictionary.')
 
-    def _create_folders(self, save_log: bool) -> dict:
+    def _create_folders(self, save_log: bool):
         """
         Creates the main folders of the directory structure.
 
@@ -142,8 +161,8 @@ class FolderHandler(BaseFunction):
         dict
             The main folders of the directory structure
         """
-        basedir = self.root_path()
-        main_structure = self.dir_template().get('main_template')
+        basedir = self.root_path            
+        main_structure = self.dir_template.get('main_template')
         if main_structure is None:
             raise KeyError('create_folders: Main template was not found.')
 
@@ -156,13 +175,12 @@ class FolderHandler(BaseFunction):
                 log_path = None
         else:
             log_path = None
-        self._log_path = log_path
+        self.log_path = log_path
 
         for value in main_structure.values():
             value.mkdir(parents=True, exist_ok=True)
 
-        return main_structure
-
+        self.__folder_structure = main_structure
 
     def create_subdir(self, directory: str) -> None:
         """
@@ -177,25 +195,25 @@ class FolderHandler(BaseFunction):
         -------
         None
         """
-        sub_structure = self.dir_template().get('sub_template')
+        sub_structure = self.dir_template.get('sub_template')
         if sub_structure is None:
             self.logger.error('create_subdirs: Sub template was not found.')
             raise KeyError('create_subdirs: Sub template was not found.')
 
         if sub_structure.get('root') is not None:
             sub_root_name = sub_structure.pop('root')
-            sub_root = self.folder_structure().get(sub_root_name)
+            sub_root = self.folder_structure.get(sub_root_name)
         else:
             sub_root = None
 
-        sub_root = self.root_path() if sub_root is None else sub_root
+        sub_root = self.root_path if sub_root is None else sub_root
 
         sub_structure = {key: sub_root / directory / value for key, value in sub_structure.items()}
 
         for value in sub_structure.values():
             value.mkdir(parents=True, exist_ok=True)
 
-        self._folder_structure[directory] = sub_structure
+        self.__folder_structure[directory] = sub_structure
 
     def move_files(self, from_path: Union[Path, str], to_path: Union[Path, str]) -> None:
         """
@@ -279,8 +297,3 @@ class FolderHandler(BaseFunction):
         None
         """
         self.close_logger()
-        self._templates_dir = None
-        self._dir_template = None
-        self._folder_structure = None
-        self._log_path = None
-        self._root_path = None

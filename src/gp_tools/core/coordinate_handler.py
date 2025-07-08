@@ -529,6 +529,3 @@ class CoordinateHandler(BaseFunction):
         self.close_logger()
         self.coordinates = None
         self.extracted_coords = None
-        self.coordinate_path = None
-        self.selected_reprojection = None
-        self.reproj_dir = None

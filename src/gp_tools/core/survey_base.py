@@ -35,21 +35,16 @@ class SurveyBase(BaseFunction):
         dir_structure : str or dict
             The directory structure of the project directory.
         """
-        self._coordinates_raw = None
-        self._coordinates_proc = None
-        self._coordinates_grouped = None
+        self.coordinates_raw = None
+        self.coordinates_proc = None
+        self.coordinates_grouped = None
 
-        self._project_dir = Path(project_dir)
-        self._dir_structure = dir_structure
+        self.__project_dir = Path(project_dir)
+        self._gp_folder = FolderHandler(root_path=self.project_dir, template=dir_structure, save_log=save_log)
+        self.logger = self._setup_logger(log_path=self.log_path)
+        self._gp_coords = CoordinateHandler(log_path=self.log_path)
 
-        self._gp_folder = FolderHandler(root_path=self._project_dir, template=self._dir_structure, save_log=save_log)
-        self._log_path = self._gp_folder.log_path()
-        self._folder_structure = self._gp_folder.folder_structure()
-
-        self.logger = self._setup_logger(log_path=self._log_path)
-
-        self._gp_coords = CoordinateHandler(log_path=self._log_path)
-
+    @property
     def project_dir(self) -> Path:
         """
         Returns the project directory.
@@ -59,8 +54,9 @@ class SurveyBase(BaseFunction):
         Path
             The project directory.
         """
-        return self._project_dir
+        return self.__project_dir
 
+    @property
     def folder_structure(self) -> dict:
         """
         Returns the folder structure of the project directory.
@@ -70,8 +66,9 @@ class SurveyBase(BaseFunction):
         dict
             The folder structure of the project directory.
         """
-        return self._folder_structure
+        return self._gp_folder.folder_structure
 
+    @property
     def log_path(self) -> Optional[Path]:
         """
         Returns the log path of the project directory.
@@ -81,8 +78,9 @@ class SurveyBase(BaseFunction):
         Path
             The log path of the project directory.
         """
-        return self._log_path
+        return self._gp_folder.log_path
 
+    @property
     def coordinates_raw(self) -> Optional[pd.DataFrame]:
         """
         Returns the raw coordinates.
@@ -92,8 +90,19 @@ class SurveyBase(BaseFunction):
         pd.DataFrame
             The raw coordinates.
         """
-        return self._coordinates_raw
+        return self.__coordinates_raw
+    
+    @coordinates_raw.setter
+    def coordinates_raw(self, coordinates: Optional[pd.DataFrame]):
+        """
+        Setter of coordinates_raw property.
+        """
+        if coordinates is None or isinstance(coordinates, pd.DataFrame):
+            self.__coordinates_raw = coordinates
+        else:
+            self.logger.error(f'Coordinates must be None or a DataFrame: {type(coordinates)} was given.')
 
+    @property
     def coordinates_proc(self) -> Optional[pd.DataFrame]:
         """
         Returns the processed coordinates.
@@ -103,8 +112,19 @@ class SurveyBase(BaseFunction):
         pd.DataFrame
             The processed coordinates.
         """
-        return self._coordinates_proc
+        return self.__coordinates_proc
+    
+    @coordinates_proc.setter
+    def coordinates_proc(self, coordinates: Optional[pd.DataFrame]):
+        """
+        Setter of coordinates_proc property.
+        """
+        if coordinates is None or isinstance(coordinates, pd.DataFrame):
+            self.__coordinates_proc = coordinates
+        else:
+            self.logger.error(f'Coordinates must be None or a DataFrame: {type(coordinates)} was given.')
 
+    @property
     def coordinates_grouped(self) -> Optional[dict]:
         """
         Returns the grouped coordinates.
@@ -114,9 +134,19 @@ class SurveyBase(BaseFunction):
         dict
             The grouped coordinates.
         """
-        return self._coordinates_grouped
+        return self.__coordinates_grouped
+    
+    @coordinates_grouped.setter
+    def coordinates_grouped(self, coordinates: Optional[dict]):
+        """
+        Setter of coordinates_grouped property.
+        """
+        if coordinates is None or isinstance(coordinates, dict):
+            self.__coordinates_grouped = coordinates
+        else:
+            self.logger.error(f'Grouped coordinates must be None or a Dictionary: {type(coordinates)} was given.')
 
-    def coords_read(self, coords: Union[Path, str] = None, sep: str = ',') -> None:
+    def coords_read(self, coords: Union[Path, str] = None, sep: str = ','):
         """
         Reads the coordinates from a file.
         If no file is given, the function will look for raw and processed coordinate files in the directory structure.
@@ -132,8 +162,8 @@ class SurveyBase(BaseFunction):
         -------
         None
         """
-        raw_coords = self._folder_structure.get('coordinates_raw')
-        proc_coords = self._folder_structure.get('coordinates_proc')
+        raw_coords = self.folder_structure.get('coordinates_raw')
+        proc_coords = self.folder_structure.get('coordinates_proc')
 
         if coords is None:
             if raw_coords is not None and raw_coords.exists():
@@ -144,7 +174,7 @@ class SurveyBase(BaseFunction):
                     self.logger.warning('coords_read: No raw coordinate files found in the directory structure.')
                 else:
                     self._gp_coords.read(file_path=raw_paths[0], sep=sep)
-                    self._coordinates_raw = self._gp_coords.coordinates
+                    self.coordinates_raw = self._gp_coords.coordinates
 
             if proc_coords is not None and proc_coords.exists():
                 proc_paths = [path for path in proc_coords.iterdir() if path.is_file()]
@@ -154,17 +184,17 @@ class SurveyBase(BaseFunction):
                     self.logger.warning('coords_read: No processed coordinate files found in the directory structure.')
                 else:
                     self._gp_coords.read(file_path=proc_paths[0], sep=sep)
-                    self._coordinates_proc = self._gp_coords.coordinates
-                    self._coordinates_grouped = self._gp_coords.extract_coords()
+                    self.coordinates_proc = self._gp_coords.coordinates
+                    self.coordinates_grouped = self._gp_coords.extract_coords()
 
         else:
             coords = Path(coords)
             if coords.exists():
                 file_name = coords.name
                 new_coords = raw_coords / file_name
-                self._gp_folder.move_files(from_path=coords, to_path=raw_coords)
+                self._gp_folder.copy_files(from_path=coords, to_path=raw_coords)
                 self._gp_coords.read(file_path=new_coords, sep=sep)
-                self._coordinates_raw = self._gp_coords.coordinates
+                self.coordinates_raw = self._gp_coords.coordinates
             else:
                 self.logger.warning('coords_read: No file found. Tries reading from the directory structure.')
                 if coords is not None:
@@ -269,7 +299,7 @@ class SurveyBase(BaseFunction):
 
     def coords_extract_save(self) -> None:
         """
-        Groups coordinates and saves it to self._coordinates_grouped.
+        Groups coordinates and saves it to self.coordinates_grouped.
         If a processed coordinates folder is found in the directory structure, the processed coordinates will be saved there.
         (using the GPcoords class)
 
@@ -277,9 +307,9 @@ class SurveyBase(BaseFunction):
         -------
         None
         """
-        self._coordinates_grouped = self._gp_coords.extract_coords()
+        self.coordinates_grouped = self._gp_coords.extract_coords()
 
-        proc_coords = self._folder_structure.get('coordinates_proc')
+        proc_coords = self.folder_structure.get('coordinates_proc')
         if proc_coords is None:
             self.logger.warning('coords_extract_save: No processed coordinates folder found in the directory structure.')
         else:
@@ -320,15 +350,7 @@ class SurveyBase(BaseFunction):
         self.close_logger()
         self._gp_folder.close()
         self._gp_coords.close()
-        if hasattr(self, '_gp_config'):
-            self._gp_config.close()
 
-        self._coordinates_raw = None
-        self._coordinates_proc = None
-        self._coordinates_grouped = None
-        self._project_dir = None
-        self._dir_structure = None
-        self._gp_folder = None
-        self._log_path = None
-        self._folder_structure = None
-        self._gp_coords = None
+        self.coordinates_raw = None
+        self.coordinates_proc = None
+        self.coordinates_grouped = None

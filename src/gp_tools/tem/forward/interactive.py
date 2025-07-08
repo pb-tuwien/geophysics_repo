@@ -14,8 +14,6 @@ from ipywidgets.widgets import *
 import ipywidgets as widgets
 from IPython.display import display, clear_output
 from datetime import datetime
-
-
 from .modeller import ForwardTEM
 from .utils import save_as_tem
 # from .utils import get_TEMFAST_rampdata

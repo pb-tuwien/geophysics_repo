@@ -187,14 +187,14 @@ class TEMfile(BaseFunction):
         self.__data_delimiter = '\t'
 
         self.__reading_lines = [
-            r'([\w\W]+)\s+Date:\s*(\w+ \w+ \d+ \d+:\d+:\d+ \d+)',
+            r'([\w\W]+)\s+Date:\s*([\w\W]+)',
             r'Place:\s*([\w\W]+)',
             r'#Set\s*([\w\W]+)',
             r'Time-Range\s+(\d+)\s+Stacks\s+(\d+)\s+deff=\s*(\d+)\s*us\s*I=(\d+(?:\.\d+)?)\s*A\s*FILTR=(\d+)\s*Hz\s*AMPLIFER=(\w+)',
             r'T-LOOP \(m\)\s+([\d\.]+)\s+R-LOOP \(m\)\s+([\d\.]+)\s+TURN=\s*(\d+)',
             r'Comments:\s*([\w\W]+)',
             r'Location:\s*x=\s*(None|[+-]?[\d\.]+)\s*y=\s*(None|[+-]?[\d\.]+)\s*z=\s*(None|[+-]?[\d\.]+)'
-        ] #([+-]?\d+\.\d+)
+        ]
 
         self.__writing_lines = [
             '{device}\tDate:\t{date}',
@@ -347,6 +347,7 @@ class TEMfile(BaseFunction):
             columns = lines[instance.__header_len].strip().split(instance.__data_delimiter)
             raw_data = [line.strip().split(instance.__data_delimiter) for line in lines[instance.__header_len + 1:]]
             dataframe = instance.safe_to_numeric(pd.DataFrame(columns=columns, data=raw_data))
+            dataframe.replace('nan', np.nan, inplace=True)
 
             pattern = r'\s*\n\s*'.join(instance.__reading_lines)
             matched = re.search(pattern, sounding)
@@ -551,6 +552,7 @@ class TIMfile(BaseFunction):
             columns = lines[instance.__header_len].strip().split(instance.__data_delimiter)
             raw_data = [line.strip().split(instance.__data_delimiter) for line in lines[instance.__header_len + 1:]]
             dataframe = instance.safe_to_numeric(pd.DataFrame(columns=columns, data=raw_data))
+            dataframe.replace('nan', np.nan, inplace=True)
 
             pattern = r'\s*\n\s*'.join(instance.__reading_lines)
             matched = re.search(pattern, sounding)
