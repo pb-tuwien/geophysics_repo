@@ -17,7 +17,6 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
-import pygimli.viewer.mpl
 from scipy.interpolate import CubicSpline
 
 from gp_tools.core import TEMfile, TIMfile, SurveyBase
