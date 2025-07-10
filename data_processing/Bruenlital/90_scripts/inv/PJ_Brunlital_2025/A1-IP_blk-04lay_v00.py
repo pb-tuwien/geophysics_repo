@@ -136,7 +136,7 @@ path_data = str(path)+'/'
 main = str(main)+'/'
 fnames = ['20250710_A1.tem']
 
-scriptname = 'A1-IP_blk-03lay_v00.py'
+scriptname = 'A1-IP_blk-04lay_v00.py'
 print(f'running {scriptname} ...')
 version = scriptname.split('.')[0].split('_')[-1]
 batch_type = scriptname.split('.')[0].split('_')[-2]
@@ -176,30 +176,30 @@ ramp_data = 'salzlacken'
 # %% manual initial model and constraints
 gen_max_depth = 'constraint'
 # inlay_thk = np.r_[2.3, 8.0, 8.0, 8.0, 6.0, 8.0, 8.0, 8.0]
-inlay_thk = np.r_[5, 5, 8]
+inlay_thk = np.r_[4, 4, 4, 8]
 # inlay_res = np.r_[30.0, 8.0, 8.0, 100.0, 40.0, 25.0, 20.0, 20.0, 20.0]
 # inlay_res = np.r_[30, 30, 30, 30, 30, 30]
-inlay_res = np.r_[50, 1500, 1500, 500]
+inlay_res = np.r_[50, 1500, 1500, 500, 500]
 
 # inlay_mpa = np.r_[0.0, 0.4, 0.4, 0.4, 0.0, 0.0, 0.0, 0.0, 0.0]
 # inlay_mpa = np.r_[0.0, 0.3, 0.3, 0.3, 0.3, 0.3]
-inlay_mpa = np.r_[0.0, 0.4, 0.4, 0.0]
+inlay_mpa = np.r_[0.0, 0.4, 0.4, 0.4, 0.0]
 # inlay_taup = np.r_[1e-6, 5e-4, 5e-4, 5e-4, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6]
-inlay_taup = np.r_[1e-6, 5e-5, 5e-4, 1e-6]
+inlay_taup = np.r_[1e-6, 5e-4, 5e-4, 1e-6, 1e-6]
 # inlay_c = np.r_[0.01, 0.5, 0.5, 0.5, 0.01, 0.01, 0.01, 0.01, 0.01]
-inlay_c = np.r_[0.1, 0.5, 0.9, 0.1]
+inlay_c = np.r_[0.1, 0.7, 0.7, 0.1, 0.1]
 
 # constr_thk = np.r_[1, 0, 0, 0, 0, 0, 0, 0]
-constr_thk = np.r_[0, 0, 0]
+constr_thk = np.r_[0, 0, 0, 0]
 # constr_res = np.r_[0, 0, 0, 0, 0, 0, 0, 0, 0]
-constr_res = np.r_[0, 0, 0, 0]
+constr_res = np.r_[0, 0, 0, 0, 0]
 
 # constr_mpa = np.r_[1, 0, 0, 0, 1, 1, 1, 1, 1]
-constr_mpa = np.r_[1, 0, 0, 1]
+constr_mpa = np.r_[1, 0, 0, 1, 1]
 # constr_taup = np.r_[1, 0, 0, 0, 1, 1, 1, 1, 1]
-constr_taup = np.r_[1, 0, 0, 1]
+constr_taup = np.r_[1, 0, 0, 1, 1]
 # constr_c = np.r_[1, 0, 0, 0, 1, 1, 1, 1, 1]
-constr_c = np.r_[1, 0, 0, 1]
+constr_c = np.r_[1, 0, 0, 1, 1]
 
 
 # %% automatic parameters for IP inversion ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
