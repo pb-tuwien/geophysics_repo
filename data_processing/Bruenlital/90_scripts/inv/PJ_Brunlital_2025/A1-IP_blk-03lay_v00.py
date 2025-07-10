@@ -21,7 +21,8 @@ intended for inverting a full dataset with similar parameters
 # %% import modules
 import os
 import sys
-path_to_libs = ('/shares/laigner/home/programming/PYTHON/')
+from pathlib import Path
+path_to_libs = ("C:/Users/jakob/Documents/Meine Ordner/TU/Geophysik/GP_Lukas/em_modeling/")
 
 if not path_to_libs in sys.path:
     sys.path.append(path_to_libs)
@@ -121,16 +122,21 @@ save_data = True
 save_to_xls = False
 
 test_single_sounding = False  # run for all soundings 
-# test_single_sounding = 'first'
+test_single_sounding = 'first'
 # test_single_sounding = 'last'
 
 
 # %% directions data
-main = '../../../'
-path_data = main + '00_data/selected/'
-fnames = ['240715-N1.tem']
+main = Path(__file__).parents[3]
 
-scriptname = os.path.basename(sys.argv[0])
+proj_dir = '00_data/selected/'
+path = main / proj_dir
+
+path_data = str(path)+'/'
+main = str(main)
+fnames = ['20250710_A1.tem']
+
+scriptname = 'A1-IP_blk-03lay_v00.py'
 print(f'running {scriptname} ...')
 version = scriptname.split('.')[0].split('_')[-1]
 batch_type = scriptname.split('.')[0].split('_')[-2]
@@ -154,7 +160,7 @@ gen_nlayers = 6 # NOT > 15
 
 # time_ranges = np.array([[8., 200.], [8., 400.], [8., 600.]])  # in us
 # time_ranges = np.array([[8., 800.], [8., 1000.], [8., 1000.], [8., 1000.], [8., 1000.]])  # in us
-time_ranges = np.array([[5., 60.]])  # in us
+time_ranges = np.array([[5., 100.]])  # in us
 
 # thk_lu = (2, 30) # (1, 10)    # boundaries for layer thicknesses
 # res_lu = (1, 800) # (0.5, 500)  # boundaries for resistivity layers
@@ -170,18 +176,18 @@ ramp_data = 'salzlacken'
 # %% manual initial model and constraints
 gen_max_depth = 'constraint'
 # inlay_thk = np.r_[2.3, 8.0, 8.0, 8.0, 6.0, 8.0, 8.0, 8.0]
-inlay_thk = np.r_[3, 6, 6]
+inlay_thk = np.r_[5, 5, 8]
 # inlay_res = np.r_[30.0, 8.0, 8.0, 100.0, 40.0, 25.0, 20.0, 20.0, 20.0]
 # inlay_res = np.r_[30, 30, 30, 30, 30, 30]
-inlay_res = np.r_[100, 1000, 1000, 300]
+inlay_res = np.r_[100, 1500, 1500, 500]
 
 # inlay_mpa = np.r_[0.0, 0.4, 0.4, 0.4, 0.0, 0.0, 0.0, 0.0, 0.0]
 # inlay_mpa = np.r_[0.0, 0.3, 0.3, 0.3, 0.3, 0.3]
-inlay_mpa = np.r_[0.0, 0.6, 0.6, 0.0]
+inlay_mpa = np.r_[0.0, 0.4, 0.4, 0.0]
 # inlay_taup = np.r_[1e-6, 5e-4, 5e-4, 5e-4, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6]
-inlay_taup = np.r_[1e-6, 1e-4, 1e-4, 1e-6]
+inlay_taup = np.r_[1e-6, 5e-5, 5e-4, 1e-6]
 # inlay_c = np.r_[0.01, 0.5, 0.5, 0.5, 0.01, 0.01, 0.01, 0.01, 0.01]
-inlay_c = np.r_[0.1, 0.9, 0.9, 0.1]
+inlay_c = np.r_[0.1, 0.5, 0.9, 0.1]
 
 # constr_thk = np.r_[1, 0, 0, 0, 0, 0, 0, 0]
 constr_thk = np.r_[0, 0, 0]
@@ -251,7 +257,7 @@ for idx, fname_data_full in enumerate(fnames):
         os.makedirs(savepath_data)
 
 
-    # %% read data ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # read data ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     survey = Survey()
     survey.parse_temfast_data(filename=fname_data_full, path=path_data)
     metadata = survey.metainfos
@@ -260,11 +266,11 @@ for idx, fname_data_full in enumerate(fnames):
     soundings = survey.soundings  # ordered dict containing all soundings from survey
     n_logs = len(loop_sizes)
 
-    # %% setup initial model
+    # setup initial model
     transThk = pg.trans.TransLogLU(thk_lu[0], thk_lu[1])  # log-transform ensures thk>0
     transRho = pg.trans.TransLogLU(res_lu[0], res_lu[1])  # lower and upper bound
 
-    # %% prepare inversion protokoll ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # prepare inversion protokoll ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     main_prot_fid = savepath_data + f'{fID_savename}.log'
     invprot_hdr = ('name\tri\tminT(us)\tmaxT(us)\tlam\tlam_fin\tmy\tcf\tnoifl\t' +
                    'max_iter\tn_iter\taRMS\trRMS\tchi2\truntime(min)')
@@ -290,7 +296,7 @@ for idx, fname_data_full in enumerate(fnames):
         with PdfPages(savepath_data + pdf_filename) as pdf:
             for log_id, snd in enumerate(snds):  # for running all soundings
 
-                # %%start by reading a single .tem data file # %% was eliminated
+                # start by reading a single .tem data file # %% was eliminated
                 # create sounding params from header:
                 setup_device = snd.get_device_settings()
                 setup_device["ramp_data"] = ramp_data
@@ -321,7 +327,7 @@ for idx, fname_data_full in enumerate(fnames):
                     os.makedirs(savepath_csv)
 
 
-                # %% prepare constraints and initial values
+                # prepare constraints and initial values
                 lays_log_parts = np.logspace(-1, 0.0, gen_nlayers, endpoint=True)
                 if gen_max_depth is None:
                     print('automatic selection of layer depth based on max loop size in survey')
@@ -436,7 +442,7 @@ for idx, fname_data_full in enumerate(fnames):
                 nparams = initmdl_arr.shape[1]
 
 
-                # %% filtering the data - # select subset according to time range
+                # filtering the data - # select subset according to time range
                 if len(time_ranges) == len(snds):
                     time_range = time_ranges[log_id] * 1e-6
                     tr0 = time_range[0]
@@ -469,11 +475,11 @@ for idx, fname_data_full in enumerate(fnames):
                 # rhoa_median = np.round(np.median(dmeas_sub.rhoa.values), 2)
 
 
-                # %% setup system and forward solver
+                # setup system and forward solver
                 device = 'TEMfast'
                 # 'ftarg': 'key_81_CosSin_2009', 'key_201_CosSin_2012', 'ftarg': 'key_601_CosSin_2009'
                 setup_solver = {'ft': 'dlf',                     # type of fourier trafo
-                                  'ftarg': 'key_601_CosSin_2009',  # ft-argument; filter type # https://empymod.emsig.xyz/en/stable/api/filters.html#module-empymod.filters -- for filter names
+                                  'ftarg': 'key_601_2009',  # ft-argument; filter type # https://empymod.emsig.xyz/en/stable/api/filters.html#module-empymod.filters -- for filter names
                                   'verbose': 0,                    # level of verbosity (0-4) - larger, more info
                                   'srcpts': 3,                     # Approx. the finite dip. with x points. Number of integration points for bipole source/receiver, default is 1:, srcpts/recpts < 3 : bipole, but calculated as dipole at centre
                                   'recpts': 3,                     # Approx. the finite dip. with x points. srcpts/recpts >= 3 : bipole
@@ -485,7 +491,7 @@ for idx, fname_data_full in enumerate(fnames):
                                   'rxloop': 'vert. dipole'}        # or 'same as txloop' - not yet operational
 
 
-                # %% inversion setup and test startmodel using first entry in mesh related lists
+                # inversion setup and test startmodel using first entry in mesh related lists
                 if ip_modeltype != None:
                     empy_frwrd = empyfrwrd_ip(setup_device=setup_device,
                                            setup_solver=setup_solver,
@@ -522,7 +528,7 @@ for idx, fname_data_full in enumerate(fnames):
                 frwrd_time = t.stop(prefix='forward-')
 
 
-                # %% visualize rawdata and filtering plus error!!
+                # visualize rawdata and filtering plus error!!
                 if show_forward_comp:
                     fg_raw, ax_raw = plt.subplots(1, 2, figsize=(12, 6))
 
@@ -601,7 +607,7 @@ for idx, fname_data_full in enumerate(fnames):
                         plt.show()
 
 
-                # %% start the inversion
+                # start the inversion
                 # prepare inversion protokoll for individual sounding
                 snd_prot_fid = savepath_csv.replace('csv/', '') + f'{fID_savename}_snd{snd_name}.log'
 
@@ -683,7 +689,7 @@ for idx, fname_data_full in enumerate(fnames):
                                     print('--------------------   INV finished   ---------------------')
 
 
-                                    # %% save result and fit
+                                    # save result and fit
                                     chi2 = tem_inv.chi2()
                                     rrms = tem_inv.relrms()
                                     arms = tem_inv.absrms()
@@ -753,7 +759,7 @@ for idx, fname_data_full in enumerate(fnames):
                                         jac_df.to_csv(savepath_csv + savename + '_jac.csv')
 
 
-                                    # %% save main log
+                                    # save main log
                                     logline = ("%s\t" % (snd_name) +
                                                 "r%03d\t" % (inv_run) +
                                                 "%.1f\t" % (tr0*1e6) +
@@ -777,7 +783,7 @@ for idx, fname_data_full in enumerate(fnames):
                                     inv_run += 1
 
 
-                # %% reload results and plot
+                # reload results and plot
                 if show_results:
                     # read main protocol
                     snd_log = pd.read_csv(snd_prot_fid, delimiter='\t', dtype=str)
@@ -959,7 +965,7 @@ for idx, fname_data_full in enumerate(fnames):
                                         'invrun{:03d}_{:s}_jac.png'.format(inv_run, snd_name))
 
 
-                        # %% save plots
+                        # save plots
                         figj, axj = snd_n.plot_jacobian()
 
                         if save_resultplot == True:
@@ -1004,3 +1010,5 @@ if save_to_xls:
         survey_n.save_inv_as_zondxls(save_filename=save_filename, fid_coordinates=None)
 
 total_time = full_time.stop(prefix='total runtime-')
+
+# %%
