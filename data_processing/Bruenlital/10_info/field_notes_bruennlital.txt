@@ -1,0 +1,81 @@
+Field Notes Brünlital TEM campaign 10.07.2025
+
+Test 1: 4A, 24V, Timekey 3, Stack 10; near the entrance of the valley in the middle
+
+Test 2: Timekey 4, Stack 10
+-> Test 1 had good results at late times, therefore a longer timekey was tested
+-> nearly identical values at the times also measured in the timekey 3, late times also have high errors, therefore time 3 was chosen
+
+Test 3: Time 3, Stack 5
+because we had good values and low errors with Stack 10, Stack 15 was not tested
+Stack 5 had little bit higher errors than Stack 10, therefore we stuck to stack 10
+
+# all following Soundings were aquired using 4A, 24V, time 3, stack 10
+
+# Measurement area description: likely permafrost area, talus slope
+soil, when visible is wet, some snow is still in the valley (marked when in sounding area), otherwise no ice visible
+rocks at the higher places in the slope tend to be smaller 0.5-30cm, at the bottom rock tend to be bigger 5-200cm
+Field scetch in folder 60_map file field_sketch
+map with exact coordinates in file folder 60_map file bruenlital_map
+
+## Area measurement A was subdivided into 6 profiles A1-A6
+
+B001: Start of profile A1
+Coords A1_001-A1_004 - line has coords of scheme A1_0XX
+Middle of area, top of north facing side of valley. Fine material, probably no or little permafrost
+profile goes down the valley
+
+B007: Start of profile A2
+Coords A2_001-A2_004 - line has coords of scheme A2_0XX
+more towards valley entrance than A1
+profile goes up the valley
+
+B012: End of profile A2
+Coords A2_011-A2_014
+little bit of snow on the top edge of the sounding
+
+B013: Start of profile A3
+Coords A3_001-A3_004 - line has coords of scheme A3_0XX
+more towards valley entrance than A2
+profile goes downhill in the valley
+
+B019: Start of profile A4
+Coords A4_001-A4_004 - line has coords of scheme A4_0XX
+more towards valley entrance than A4
+profile goes uphill in the valley
+little bit of grass in sounding B019
+
+B024: End of profile A4
+highest profile, nearest the valley entrance
+Coords A4_011-A4_014
+
+B025: Start of profile A5
+Coords A5_001-A5_004 - line has coords of scheme A5_0XX
+more into valley than A1
+profile goes uphill in the valley
+
+profile A5 has slight overlaps with profile A1
+
+B031: Start of profile A6
+Coords A6_001-A6_004 - line has coords of scheme A6_0XX
+more into valley than A5
+profile goes downhill in the valley
+### 4 corroded metal pipes with about 3cm diameter and a length of 10m are about 5m away from the top of this sounding
+-> see pictures in folder pipes_B031
+
+B036: End of profile A6
+Coords A6_011-A6_014
+last point of area coverage
+
+### Soundings from area looked quite similar, data looks good at first glance on the V/A-plot
+Anomaly was visible on all of the soundings and some area below should be descernible
+some soundings showed second batch of negative values at the very end, but with high errors - might be worth further investigation with bigger loop and/or more stackings and longer time key; could also be noise
+
+## Profile P1 follows the ERT/SRT line and attaches directly to the area coverage
+
+B037: Start of profile P1
+Coords P1_001-P1_004 - line has coords of scheme P1_0XX
+profile attaches to area coverage in the direction of adrians drawing and the ERT/SRT line
+
+B045: End of profile P1
+little bit of vegetation, so likely no permafrost

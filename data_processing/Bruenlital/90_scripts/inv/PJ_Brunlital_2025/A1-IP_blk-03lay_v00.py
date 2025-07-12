@@ -122,7 +122,7 @@ save_data = True
 save_to_xls = False
 
 test_single_sounding = False  # run for all soundings 
-test_single_sounding = 'first'
+# test_single_sounding = 'first'
 # test_single_sounding = 'last'
 
 
@@ -185,9 +185,9 @@ inlay_res = np.r_[50, 1500, 1500, 500]
 # inlay_mpa = np.r_[0.0, 0.3, 0.3, 0.3, 0.3, 0.3]
 inlay_mpa = np.r_[0.0, 0.4, 0.4, 0.0]
 # inlay_taup = np.r_[1e-6, 5e-4, 5e-4, 5e-4, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6]
-inlay_taup = np.r_[1e-6, 5e-5, 5e-4, 1e-6]
+inlay_taup = np.r_[1e-6, 5e-4, 5e-4, 1e-6]
 # inlay_c = np.r_[0.01, 0.5, 0.5, 0.5, 0.01, 0.01, 0.01, 0.01, 0.01]
-inlay_c = np.r_[0.1, 0.5, 0.9, 0.1]
+inlay_c = np.r_[0.1, 0.7, 0.7, 0.1]
 
 # constr_thk = np.r_[1, 0, 0, 0, 0, 0, 0, 0]
 constr_thk = np.r_[0, 0, 0]
