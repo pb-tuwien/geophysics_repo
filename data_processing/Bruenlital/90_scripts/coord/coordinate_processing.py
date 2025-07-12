@@ -8,13 +8,6 @@ dir_path = Path(__file__).parents[3] / 'Bruenlital/50_coord'
 raw_path = dir_path / '20250710_coords_raw.csv'
 corners_path = dir_path / '20250710_coords_corners.csv'
 centers_path = dir_path / '20250710_coords_centers.csv'
-#%% Reading coordinates from txt-File
-
-# raw_coords = pd.read_csv(raw_path)
-# raw_coords['Antenna height'] = 2.0
-# raw_coords = raw_coords[['Name', 'Longitude', 'Latitude', 'EllipsoidHeight']]
-# raw_coords.rename(columns={'EllipsoidHeight': 'Ellipsoidal height'}, inplace=True)
-# raw_coords.to_csv(raw_path, sep=',', index=False)
 
 #%% Create CSV with all the corner coordinates
 
