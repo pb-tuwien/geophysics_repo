@@ -13,75 +13,6 @@ running versions with different time ranges:
 intended for inverting a full dataset with similar parameters
 (maybe for slight changes to the number of layers or lambda)
 
-TODOs done:
-    [Done] finish saving result - use structure as for simpeg results
-        [Done] test!!
-    [Done] reread results
-    [Done] prepare plots
-    [Done] add DOI to plots
-        check jacobian also!! - later for sensitivity analysis
-    [Done] fix log files - overwrites for each result
-        [Done] add snd name
-        [Done] fixed rerreading of logs for the plots
-    [Done] add time range to folder version
-    [Done] adapt saving of models to ip_modeltype
-    [Done] adapt bounds
-    [Done] add MPA model for inversion
-        [Done] add model type switch
-
-urgent TODO:
-    [] update to Survey() class
-        [Done] data reading
-        [] re-reading
-        [] plotting parts!
-    [Done] add final lambda and n_iter to log file
-    [Done] auto depth and log scaled thk
-    [Done] gen initial model and constraints after data reading!
-    [] add bottom layer to plot model
-    [done] get device settings to sounding class
-
-    [] testrun!!
-
-non-urgent TODO:
-    [] inversion code to survey class
-    [] switch and props for smooth and non-smooth inversion
-    [] code plot afterwards that runs the section plot with default values
-        [] xls to function
-        [] kwargs?!?!
-    [] save results also as .xls
-        or better before plotting as section?? - YES
-
-
-non-urgent IP todos:
-    [] increase error around negative peak!?!
-    [] estimate tau from peak position?!
-        [] function estimate_tau()
-    [] estimate initial resistivity model from non-IP inversion
-    [] add different data transformations to forward model
-        [] incorporate to respective inversion classes
-    [] merge IP and non IP case (forward classes)
-
-
-Not yet available:
-    [] for a full parameter test use pg-smo_test-params_tXX.py
-    [] batch TEM-IP inversion, using blocky pg inversion
-    [] and for the L-Curve plot use: pg-smo_lcurve_vXX.py
-        [] add auto L-Curve plotting
-            use log file - if there are more than 5 different lambdas for similar setting
-            --> create auto L-Curve plot. (later)
-
-
-any other ideas?
-    maybe create a batch_inv class framework that handles all the looping
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-treibach mapping batch inversion
-
-v01 fix individual filtering of negative readings:
-    use individual filtering only once, not for all following soundings!
-    [] done?
-
 
 @author: lukas
 """
@@ -91,6 +22,7 @@ v01 fix individual filtering of negative readings:
 import os
 import sys
 path_to_libs = ('/shares/laigner/home/programming/PYTHON/')
+
 if not path_to_libs in sys.path:
     sys.path.append(path_to_libs)
 import logging

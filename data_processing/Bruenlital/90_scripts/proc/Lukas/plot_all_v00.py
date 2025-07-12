@@ -8,7 +8,10 @@ Created on Wed Aug  9 16:00:36 2023
 # %% import modules
 import os
 import sys
-path_to_libs = ("/shares/laigner/gp/Projects/TEM_modeling/PYTHON/")
+from pathlib import Path
+# path_to_libs = ("/shares/laigner/gp/Projects/TEM_modeling/PYTHON/")
+path_to_libs = ("C:/Users/jakob/Documents/Meine Ordner/TU/Geophysik/GP_Lukas/em_modeling/")
+
 if not path_to_libs in sys.path:
     sys.path.append(path_to_libs)
 
@@ -39,14 +42,16 @@ plt.rcParams['legend.fontsize'] = 15 - shift_sizes
 # plt.rcParams['grid.linewidth'] = 5
 
 #%% directions
-std_dir = r"../../"
+std_dir = Path(__file__).parents[3]
 
-proj_dir = r"00_data/"
-path = std_dir + proj_dir
+proj_dir = '00_data'
+path = std_dir / proj_dir
+
+path = str(path)+'/'
 path2coord = path
 
-filename = '20240709_sel.tem'
-filename = '20240709_txt.tem'
+# filename = '20240709_sel.tem'
+filename = '20250710_txt.tem'
 
 
 # %% testing
@@ -87,26 +92,28 @@ header = data.loc[indices_hdr.start[snd_id]:indices_hdr.end[snd_id]-1]
 #                           errLine=True)
 
 # plot_multiTEMlog(filename, path, minmaxALL=False,
-                  # tmin=1e0, tmax=1e4,
-                  # Smin=1e-12, Smax=1e1,
-                  # Rmin=1e1, Rmax=1e4,
-                  # dpi=300, log_rhoa=True,
-                  # errBars=True, errLine=True)
+#                   tmin=1e0, tmax=1e4,
+#                   Smin=1e-12, Smax=1e1,
+#                   Rmin=1e1, Rmax=1e4,
+#                   dpi=300, log_rhoa=True,
+#                   errBars=True, errLine=True)
 
-# plot_multiTEMlog(filename_subset, path, minmaxALL=False,
-#                 tmin=2, tmax=15500,
-#                 Smin=10e-9, Smax=1.5,
-#                 Rmin=1, Rmax=100,
-#                 dpi=300, label_s=12,
-#                 log_rhoa=False, errBars=True,
-#                 errLine=True)
+plot_multiTEMlog(filename_subset, path, minmaxALL=False,
+                tmin=2, tmax=15500,
+                Smin=10e-9, Smax=1.5,
+                Rmin=1, Rmax=100,
+                dpi=300, label_s=12,
+                log_rhoa=False, errBars=True,
+                errLine=True)
 
-plot_TEMsingleFig(filename, path, minmaxALL=False,
-                  tmin=1e0, tmax=1e4,
-                  Smin=1e-12, Smax=1e1,
-                  Rmin=1e1, Rmax=1e4,
-                  dpi=300, ms=4, lw=1.25,
-                  log_rhoa=True, errBars=False,
-                  errLine=True, mkLeg=True, lg_cols=1)
+# plot_TEMsingleFig(filename, path, minmaxALL=False,
+#                   tmin=1e0, tmax=1e4,
+#                   Smin=1e-12, Smax=1e1,
+#                   Rmin=1e1, Rmax=1e4,
+#                   dpi=300, ms=4, lw=1.25,
+#                   log_rhoa=True, errBars=False,
+#                   errLine=True, mkLeg=True, lg_cols=1)
 
-generate_TEMprotocol(filename, path, sepFiles=False, matlab=True)
+# generate_TEMprotocol(filename, path, sepFiles=False, matlab=True)
+
+# %%
