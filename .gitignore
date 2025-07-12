@@ -1,7 +1,6 @@
 # Those files are untraced
 *.perf
 *.npz
-*.pdf
 *.vscode
 *__pycache__/
 */__pycache__/
