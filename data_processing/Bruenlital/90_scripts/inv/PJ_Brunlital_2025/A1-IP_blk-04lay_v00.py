@@ -122,7 +122,7 @@ save_data = True
 save_to_xls = False
 
 test_single_sounding = False  # run for all soundings 
-test_single_sounding = 'first'
+# test_single_sounding = 'first'
 # test_single_sounding = 'last'
 
 
