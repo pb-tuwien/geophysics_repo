@@ -32,12 +32,12 @@ elevation_column = 'Elevation'
 
 # Chosen soundings (relative paths from .../30_inv-results/{inversion_type}/)
 sounding_files = [
-    'A1-IP_blk-04lay/20250710_A1/v00_tr5-100us/B001/csv/invrun000_B001.csv',
-    'A1-IP_blk-04lay/20250710_A1/v00_tr5-100us/B002/csv/invrun000_B002.csv',
-    'A1-IP_blk-04lay/20250710_A1/v00_tr5-100us/B003/csv/invrun000_B003.csv',
-    'A1-IP_blk-04lay/20250710_A1/v00_tr5-100us/B004/csv/invrun000_B004.csv',
-    'A1-IP_blk-04lay/20250710_A1/v00_tr5-100us/B005/csv/invrun000_B005.csv',
-    'A1-IP_blk-04lay/20250710_A1/v00_tr5-100us/B006/csv/invrun000_B006.csv'
+    'A1-IP_blk-04lay/20250710_A1/v00_tr5-100us/B001/csv/invrun005_B001.csv',
+    'A1-IP_blk-04lay/20250710_A1/v00_tr5-100us/B002/csv/invrun005_B002.csv',
+    'A1-IP_blk-04lay/20250710_A1/v00_tr5-100us/B003/csv/invrun005_B003.csv',
+    'A1-IP_blk-04lay/20250710_A1/v00_tr5-100us/B004/csv/invrun005_B004.csv',
+    'A1-IP_blk-04lay/20250710_A1/v00_tr5-100us/B005/csv/invrun005_B005.csv',
+    'A1-IP_blk-04lay/20250710_A1/v00_tr5-100us/B006/csv/invrun005_B006.csv'
 ]
 
 # Index of the first and last sounding of the line
