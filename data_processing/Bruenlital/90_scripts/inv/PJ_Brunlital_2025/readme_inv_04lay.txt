@@ -5,3 +5,18 @@ A1-v00:
 
 P1-v00:
     same parameters as A1-v00
+
+A2-v00:
+    same parameters as A1-v00
+
+A3-v00:
+    same parameters as A1-v00
+
+A4-v00:
+    same parameters as A1-v00
+
+A5-v00:
+    same parameters as A1-v00
+
+A6-v00:
+    same parameters as A1-v00
