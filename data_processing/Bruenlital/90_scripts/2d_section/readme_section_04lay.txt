@@ -5,9 +5,9 @@ A1_section:
     Soundings: B001, B002, B003, B004, B005, B006
 
     v00:
-        filter: v00_tr5-100us file: invrun000_B001.csv
-        filter: v00_tr5-100us file: invrun000_B002.csv
-        filter: v00_tr5-100us file: invrun000_B003.csv
-        filter: v00_tr5-100us file: invrun000_B004.csv
-        filter: v00_tr5-100us file: invrun000_B005.csv
-        filter: v00_tr5-100us file: invrun000_B006.csv
+        filter: v00_tr5-100us file: invrun005_B001.csv
+        filter: v00_tr5-100us file: invrun005_B002.csv
+        filter: v00_tr5-100us file: invrun005_B003.csv
+        filter: v00_tr5-100us file: invrun005_B004.csv
+        filter: v00_tr5-100us file: invrun005_B005.csv
+        filter: v00_tr5-100us file: invrun005_B006.csv
