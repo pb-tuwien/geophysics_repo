@@ -110,7 +110,7 @@ ending_point = sounding_coordinates[sounding_coordinates['Name'] == ending_name]
 
 # Calculate the direction vector of the line
 profile_vector = ending_point - starting_point
-profile_length = line_length = np.linalg.norm(profile_vector)
+profile_length = np.linalg.norm(profile_vector)
 profile_unit_vector = profile_vector / profile_length
 
 # Function to project a point onto the line and calculate the distance from the start
