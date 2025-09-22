@@ -110,14 +110,15 @@ class ForwardTEM:
         return self.__device
     
     @device.setter
-    def device(self, device: str):
+    def device(self, devicestr: str):
         """
         Setter for the device attribute.
         """
-        if device != 'TEMfast':
-            print('Currently only TEMfast is supported.')
+        if devicestr != 'TEMfast':
+            # print('Currently only TEMfast is supported.')
+            print('device is: {}'.format(devicestr))
         else:
-            self.__device = device
+            self.__device = devicestr
     
     @property
     def timekey(self) -> int:
@@ -895,7 +896,7 @@ class ForwardTEM:
                 res2con = False
             else:
                 res2con = self.res2con
-            self.plot_model(model=model, ax=ax_model[i], res2con=res2con, color=color)
+            self.plot_model(model=model, ax=ax_model[i], res2con=res2con, color=color, marker='o')
             if i > 0:
                 ax_model[i].set_title(title, fontsize=14)
                 ax_model[i].set_xlabel(label)
