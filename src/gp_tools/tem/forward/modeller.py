@@ -884,7 +884,7 @@ class ForwardTEM:
         self.plot_data(
             ax=ax_response, show_noise=show_noise, 
             label=description, color=color,
-            plot_noisy=plot_noisy, legend=legend
+            plot_noisy=plot_noisy, legend=legend, marker='o'
             )
 
         labels, titles, limits = self.__get_model_parameters()
