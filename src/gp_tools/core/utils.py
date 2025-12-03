@@ -248,3 +248,84 @@ class BaseFunction:
                     handler.close()
                     logger.removeHandler(handler)
         self._output(f'{self.__class__.__name__}: Logging to file stopped.')
+
+#%% Some Useful Functions
+# Sorting function for names like P2_1, P2_2,...
+def sort_by_label(df: pd.DataFrame, column: str) -> None:
+    
+    num_groups = len(df[column][0].split('_'))
+
+    df[[f'Part{i + 1}' for i in range(num_groups)]] = df[column].apply(
+        lambda x: x.split('_')).apply(pd.Series)
+    
+    for i in range(num_groups):
+        col_name = f'Part{i + 1}'
+        df[col_name] = BaseFunction().safe_to_numeric(data=df[col_name])
+
+    df.sort_values(by=[f'Part{i + 1}' for i in range(num_groups)], inplace=True)
+    df.drop(columns=[f'Part{i + 1}' for i in range(num_groups)], inplace=True)
+    df.reset_index(drop=True, inplace=True)
+    return
+
+# Extrapolation function
+def extrapolate_points(dataframe:pd.DataFrame,
+                       name_column: str,
+                       min_point: str, 
+                       max_point: str,
+                       distance: float,
+                       new_points: list[str]) -> pd.DataFrame:
+    
+    df = dataframe.copy()
+    start_point = df[df[name_column] == min_point][['x', 'y', 'z']].to_numpy()
+    end_point = df[df[name_column] == max_point][['x', 'y', 'z']].to_numpy()
+    vector = end_point - start_point
+    unit_vector = vector / np.linalg.norm(vector)
+
+    add_distance = distance
+
+    for name in new_points:
+        new_point = (end_point + add_distance * unit_vector).tolist()[0]
+        new_df = pd.DataFrame([[name] + new_point], columns=df.columns)
+        df = pd.concat([df, new_df], ignore_index=True)
+        add_distance += distance
+
+    return df
+
+# Interpolation function
+def interpolate_points(dataframe:pd.DataFrame,
+                       name_column: str,
+                       min_point: str, 
+                       max_point: str,
+                       new_points: list[str]) -> pd.DataFrame:
+    
+    df = dataframe.copy()
+    start_point = df[df[name_column] == min_point][['x', 'y', 'z']].to_numpy()
+    end_point = df[df[name_column] == max_point][['x', 'y', 'z']].to_numpy()
+    vector = end_point - start_point
+    unit_vector = vector / np.linalg.norm(vector)
+    distance = np.linalg.norm(vector) / (len(new_points) + 1)
+
+    add_distance = distance
+
+    for name in new_points:
+        new_point = (start_point + add_distance * unit_vector).tolist()[0]
+        new_df = pd.DataFrame([[name] + new_point], columns=df.columns)
+        df = pd.concat([df, new_df], ignore_index=True)
+        add_distance += distance
+
+    return df
+
+# Project onto line
+def project_to_1D(df:pd.DataFrame) -> None:
+    all_points = df[['x', 'y']].to_numpy()
+    start_point = all_points[0]
+    end_point = all_points[-1]
+
+    vector = end_point - start_point
+    unit_vector = vector / np.linalg.norm(vector)
+
+    x_coords = np.dot(all_points-start_point, unit_vector)
+    y_coords = np.zeros_like(x_coords)
+    proj_points = np.column_stack([x_coords, y_coords])
+    df[['x', 'y']] = proj_points
+    return

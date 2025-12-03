@@ -110,7 +110,7 @@ class OHMfile(BaseFunction):
             raise TypeError(f'Must provide {self.__allowed_suffix}-file: {self.filepath.suffix} was given.')
 
     @classmethod
-    def read(cls, filepath: Union[str, Path]):
+    def read(cls, filepath: Union[str, Path], header_delim: Optional[str] = None):
         """
         Read an OHM-file.
         
@@ -128,7 +128,8 @@ class OHMfile(BaseFunction):
 
         with open(file=filepath, mode='r') as file:
             n_elec = int(file.readline().strip())
-            elec_header = file.readline().strip().replace('#', '').split()
+            elec_header = file.readline().strip().replace('#', '').split(header_delim)
+            elec_header = [i.strip() for i in elec_header]
             elec_rows = []
             for _ in range(n_elec):
                 line = file.readline()
@@ -137,7 +138,8 @@ class OHMfile(BaseFunction):
             instance.electrodes = pd.DataFrame(elec_rows, columns=elec_header)
 
             n_data = int(file.readline().strip())
-            data_header = file.readline().strip().replace('#', '').split()
+            data_header = file.readline().strip().replace('#', '').split(header_delim)
+            data_header = [i.strip() for i in data_header]
             data_rows = []
             for _ in range(n_data):
                 line = file.readline()
