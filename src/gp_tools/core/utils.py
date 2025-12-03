@@ -316,7 +316,7 @@ def interpolate_points(dataframe:pd.DataFrame,
     return df
 
 # Project onto line
-def project_to_1D(df:pd.DataFrame) -> None:
+def project_to_1D(df:pd.DataFrame, remove_overhang: bool = False) -> None:
     all_points = df[['x', 'y']].to_numpy()
     start_point = all_points[0]
     end_point = all_points[-1]
@@ -325,6 +325,12 @@ def project_to_1D(df:pd.DataFrame) -> None:
     unit_vector = vector / np.linalg.norm(vector)
 
     x_coords = np.dot(all_points-start_point, unit_vector)
+    if remove_overhang:
+        x_coords = pd.Series(x_coords)
+        diff_mask = x_coords.diff() < 0
+        for idx in x_coords[diff_mask].index:
+            x_coords[idx] = x_coords[idx-1]*1.0001
+        x_coords = x_coords.to_numpy()
     y_coords = np.zeros_like(x_coords)
     proj_points = np.column_stack([x_coords, y_coords])
     df[['x', 'y']] = proj_points
