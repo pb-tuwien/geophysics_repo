@@ -278,6 +278,8 @@ def extrapolate_points(dataframe:pd.DataFrame,
     df = dataframe.copy()
     start_point = df[df[name_column] == min_point][['x', 'y', 'z']].to_numpy()
     end_point = df[df[name_column] == max_point][['x', 'y', 'z']].to_numpy()
+    if len(start_point) == 0 or len(end_point) == 0:
+        raise KeyError('min_point or max_point not found')
     vector = end_point - start_point
     unit_vector = vector / np.linalg.norm(vector)
 
@@ -327,9 +329,10 @@ def project_to_1D(df:pd.DataFrame, remove_overhang: bool = False) -> None:
     x_coords = np.dot(all_points-start_point, unit_vector)
     if remove_overhang:
         x_coords = pd.Series(x_coords)
-        diff_mask = x_coords.diff() < 0
-        for idx in x_coords[diff_mask].index:
-            x_coords[idx] = x_coords[idx-1]*1.0001
+        while (x_coords.diff() < 0).sum() > 0:
+            diff_mask = x_coords.diff() < 0
+            for idx in x_coords[diff_mask].index:
+                x_coords[idx] = x_coords[idx-1]*1.0001
         x_coords = x_coords.to_numpy()
     y_coords = np.zeros_like(x_coords)
     proj_points = np.column_stack([x_coords, y_coords])

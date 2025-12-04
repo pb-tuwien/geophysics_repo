@@ -1,0 +1,24 @@
+{
+    "name": "ert_peter",
+    "type": "dir_structure",
+    "main_template": {
+        "log": "ERT-log/ert.log",
+
+        "coordinates_raw": "ERT-coordinates/01-raw",
+        "coordinates_proc": "ERT-coordinates/02-processed",
+        "coordinates_proj": "ERT-coordinates/03-projected",
+
+        "data_raw": "ERT-data/01-raw",
+        "data_preproc": "ERT-data/02-preprocessed",
+        "data_filtered": "ERT-data/03-filtered",
+        "data_mesh": "ERT-data/04-mesh",
+        "data_inversion": "ERT-data/05-inversion",
+        "data_forward": "ERT-data/06-forward_model",
+
+        "plot_pseudo": "ERT-plot/01-pseudo_sections",
+        "plot_filter": "ERT-plot/02-filtered",
+        "plot_mesh": "ERT-plot/03-mesh",
+        "plot_inversion": "ERT-plot/04-inversion",
+        "plot_proc": "ERT-plot/04-processed_inversion"
+    }
+}
